@@ -26,7 +26,7 @@ let grid_size = {value: 2}; //Scale the Canvas
 let pixels = {value: 16};  //Quantity of pixels, more detail, level of detail
 let y = 0;
 let x = 0;
-var reload = {value: 0};
+var ready = {value: 0};
 
 stride = grid_size.value / pixels.value;
 //
@@ -38,7 +38,7 @@ var setup = function(){
 
 var draw = function(){
 
-    if(reload.value == 0){
+    if(ready.value == 1){
         y=0;
         perlin.seed();
         for(y; y < grid_size.value; y+=stride){
@@ -61,7 +61,7 @@ var draw = function(){
                 box.position.z = 0;
             }
         }
-        reload.value = 1;
+        ready.value = 0;
          
     }
 }
@@ -85,8 +85,8 @@ folder.add(grid_size,'value' ,0, 24)
     .name('grid_size')
 folder.add(pixels,'value' ,0, 1024)
     .name('pixels')
-folder.add(reload, 'value', 0,1)
-    .name('reload')
+folder.add(ready, 'value', 0,1)
+    .name('ready')
 
 animate();
 
