@@ -22,8 +22,8 @@ camera.rotation.z = 180; // set the camera position
 // scene.add(light1);
 
 //
-let grid_size = {value: 4}; //Scale the Canvas 
-let pixels = {value: 8};  //Quantity of pixels, more detail, level of detail
+let grid_size = {value: 8}; //Scale the Canvas 
+let pixels = {value: 128};  //Quantity of pixels, more detail, level of detail
 let y = 0;
 let x = 0;
 var ready = {value: 0};
@@ -37,7 +37,7 @@ var setup = function(){
 }
 
 var draw = function(){
-
+    stride = grid_size.value / pixels.value;
     if(ready.value == 1){
         y=0;
         perlin.seed();
@@ -76,17 +76,17 @@ var animate = function() {
     renderer.render(scene, camera); // needed to work
 };
 
-const datGui  = new dat.GUI({ autoPlace: true });
+// const datGui  = new dat.GUI({ autoPlace: true });
   
-datGui.domElement.id = 'gui' 
+// datGui.domElement.id = 'gui' 
   
-folder = datGui.addFolder(`Variables`)
-folder.add(grid_size,'value' ,0, 24)
-    .name('grid_size')
-folder.add(pixels,'value' ,0, 1024)
-    .name('pixels')
-folder.add(ready, 'value', 0,1)
-    .name('ready')
+// folder = datGui.addFolder(`Variables`)
+// folder.add(grid_size,'value' ,0, 24)
+//     .name('grid_size')
+// folder.add(pixels,'value' ,0, 1024)
+//     .name('pixels')
+// folder.add(ready, 'value', 0,1)
+//     .name('ready')
 
 animate();
 
