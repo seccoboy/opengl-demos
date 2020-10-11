@@ -22,11 +22,13 @@ camera.rotation.z = 180; // set the camera position
 // scene.add(light1);
 
 //
-let grid_size = 4; //Scale the Canvas 
-let pixels = 32;  //Quantity of pixels, more detail, level of detail
+let grid_size = {value: 2}; //Scale the Canvas 
+let pixels = {value: 16};  //Quantity of pixels, more detail, level of detail
 let y = 0;
 let x = 0;
-stride = grid_size / pixels;
+var reload = {value: 0};
+
+stride = grid_size.value / pixels.value;
 //
 
 var setup = function(){
@@ -35,28 +37,33 @@ var setup = function(){
 }
 
 var draw = function(){
-    perlin.seed();
-    for(y; y < grid_size; y+=stride){
-        x=0;
-        for(x; x< grid_size; x+=stride){
-            let z = parseInt((perlin.get(x,y)+1)*360);
-            console.log(x, y, z/360)
 
-            collor = 'hsl('+z+',50%,50%)';
-            var geometry = new THREE.PlaneGeometry(stride,stride,z);
-            var material = new THREE.LineBasicMaterial( { color: collor} );
-            var box = new THREE.Mesh( geometry, material );
-            scene.add( box );
-            // box.rotation.x = -90;
-            box.position.x=0
-            box.position.y=0
-            box.position.z=0
-            box.position.x += x;
-            box.position.y += y;
-            box.position.z = 0;
+    if(reload.value == 0){
+        y=0;
+        perlin.seed();
+        for(y; y < grid_size.value; y+=stride){
+            x=0;
+            for(x; x< grid_size.value; x+=stride){
+                let z = parseInt((perlin.get(x,y)+1)*360);
+                console.log(x, y, z/360)
+
+                collor = 'hsl('+z+',50%,50%)';
+                var geometry = new THREE.PlaneGeometry(stride,stride,z);
+                var material = new THREE.LineBasicMaterial( { color: collor} );
+                var box = new THREE.Mesh( geometry, material );
+                scene.add( box );
+                // box.rotation.x = -90;
+                box.position.x=0
+                box.position.y=0
+                box.position.z=0
+                box.position.x += x;
+                box.position.y += y;
+                box.position.z = 0;
+            }
         }
-    } 
- 
+        reload.value = 1;
+         
+    }
 }
 
 
@@ -68,8 +75,22 @@ var animate = function() {
 
     renderer.render(scene, camera); // needed to work
 };
+
+const datGui  = new dat.GUI({ autoPlace: true });
+  
+datGui.domElement.id = 'gui' 
+  
+folder = datGui.addFolder(`Variables`)
+folder.add(grid_size,'value' ,0, 24)
+    .name('grid_size')
+folder.add(pixels,'value' ,0, 1024)
+    .name('pixels')
+folder.add(reload, 'value', 0,1)
+    .name('reload')
+
 animate();
-// function onKeyDown(event) {
+
+    // function onKeyDown(event) {
 //     var keyCode = event.which;
 
 // };
