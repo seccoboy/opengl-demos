@@ -22,8 +22,8 @@ camera.rotation.z = 180; // set the camera position
 // scene.add(light1);
 
 //
-let grid_size = {value: 2}; //Scale the Canvas 
-let pixels = {value: 16};  //Quantity of pixels, more detail, level of detail
+let grid_size = {value: 4}; //Scale the Canvas 
+let pixels = {value: 8};  //Quantity of pixels, more detail, level of detail
 let y = 0;
 let x = 0;
 var ready = {value: 0};
