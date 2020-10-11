@@ -1,6 +1,6 @@
 
 var scene = new THREE.Scene();
-camera = new THREE.PerspectiveCamera(90, 800/600, 0.1, 1000); // Could use window.innerWidth/window.innerHeight
+camera = new THREE.PerspectiveCamera(90, window.innerWidth/window.innerHeight, 0.1, 1000); // Could use 1280/1024... Or... window.innerWidth/window.innerHeight
 var renderer = new THREE.WebGLRenderer();
 document.body.appendChild(renderer.domElement);
 var controls = new THREE.OrbitControls( camera, renderer.domElement ); // control de camera
@@ -9,8 +9,10 @@ scene.background = new THREE.Color('gray'); // set the background as gray
 renderer.shadowMap.enabled = true; 
 renderer.shadowMap.type = THREE.BasicShadowMap;
 
-camera.position.z = -1; // set the camera position
-camera.position.y = 0;  // a bit far from the center
+camera.position.z = 5; // set the camera position
+camera.rotation.z = 180; // set the camera position
+// camera.position.x = -2
+// camera.position.y = 2
 
 // light1 = new THREE.PointLight(0xffffff, 1, 20);
 // light1.position.set(-2,2,0);
@@ -20,13 +22,11 @@ camera.position.y = 0;  // a bit far from the center
 // scene.add(light1);
 
 //
-var points = [];
-let grid_size = 4;
-let pixels = 56;
-var widht = 800; 
-let pix_size =  widht / pixels;
+let grid_size = 4; //Scale the Canvas 
+let pixels = 32;  //Quantity of pixels, more detail, level of detail
 let y = 0;
 let x = 0;
+stride = grid_size / pixels;
 //
 
 var setup = function(){
@@ -36,17 +36,24 @@ var setup = function(){
 
 var draw = function(){
     perlin.seed();
-    var material = new THREE.LineBasicMaterial( { color: 0xFFaa33 } );
-    for(y; y < grid_size; y+=grid_size / pixels){
+    for(y; y < grid_size; y+=stride){
         x=0;
-        for(x; x< grid_size; x+=grid_size / pixels){
-            let z = parseInt(perlin.get(x,y)*360);
-            console.log(x, y, z)           
-            points.push( new THREE.Vector3( (x,y,z)));
-            var geometry = new THREE.BufferGeometry().setFromPoints( points );
+        for(x; x< grid_size; x+=stride){
+            let z = parseInt((perlin.get(x,y)+1)*360);
+            console.log(x, y, z/360)
 
-            var line = new THREE.Line( geometry, material );
-            scene.add( line );
+            collor = 'hsl('+z+',50%,50%)';
+            var geometry = new THREE.PlaneGeometry(stride,stride,z);
+            var material = new THREE.LineBasicMaterial( { color: collor} );
+            var box = new THREE.Mesh( geometry, material );
+            scene.add( box );
+            // box.rotation.x = -90;
+            box.position.x=0
+            box.position.y=0
+            box.position.z=0
+            box.position.x += x;
+            box.position.y += y;
+            box.position.z = 0;
         }
     } 
  
